@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "lago_atitlan" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-91.326256, 14.5948],
+          [-91.07151, 14.5948],
+          [-91.07151, 14.750979],
+          [-91.326256, 14.750979],
+          [-91.326256, 14.5948]
+        ]]
+      }
+    }
+  ]
+}
