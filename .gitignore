@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+data/raw/**/*.tif
+data/processed/**/*.tif
+data/processed/**/*.csv
+!data/raw/*.geojson
+.venv/
+venv/
