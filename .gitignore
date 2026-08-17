@@ -1,10 +1,19 @@
-.env
-__pycache__/
+# Python
 *.pyc
-.ipynb_checkpoints/
-data/raw/**/*.tif
-data/processed/**/*.tif
-data/processed/**/*.csv
-!data/raw/*.geojson
+*.pyo
+*.pyd
+__pycache__/
+
+# Environment
 .venv/
-venv/
+
+# Data
+data/raw/Amatitlan
+data/raw/Atitlan
+data/processed/Amatitlan
+data/processed/Atitlan
+data/processed/estadisticas_por_fecha.csv
+
+# AI
+.claude/
+.agents/
