@@ -1,60 +1,60 @@
-# Laboratorio 4 — Análisis de Datos GeoEspaciales
+# Laboratorio 4: Análisis de Datos GeoEspaciales
 
-CC3084 – Data Science, UVG. Detección de floraciones de cianobacteria en los
-lagos de Atitlán y Amatitlán usando imágenes Sentinel-2 (Copernicus Data
-Space Ecosystem) y el script oficial de cianobacteria de
-[custom-scripts.sentinel-hub.com](https://custom-scripts.sentinel-hub.com).
+Detección y análisis de floraciones de cianobacterias en los lagos de **Atitlán** y **Amatitlán** (Guatemala) a partir de imágenes **Sentinel-2** del programa Copernicus, accedidas mediante el API **openEO**.
 
 ## Estructura
 
 ```
-├── src/                 # módulos de conexión, descarga y cálculo de índices
-│   ├── config.py         # bbox de cada lago, fechas oficiales, bandas requeridas
-│   ├── sentinel_api.py    # conexión openEO + Sentinel Hub Process API
-│   ├── indices.py         # cálculo local de NDVI y NDWI
-│   └── evalscripts/       # script oficial de cianobacteria (visual y analítico)
+CC3084-Laboratorio-4/
+├── src/
+│   ├── config.py                           # coordenadas, fechas, bandas y rutas
+│   ├── auth_openeo.py                      # autenticacion en Copernicus Data Space
+│   ├── download_sentinel.py                # descarga de los recortes via openEO
+│   ├── indices.py                          # NDVI, NDWI y custom script de cianobacteria
+│   ├── procesar.py                         # genera los índices y la tabla de estadísticas
+│   └── mapas.py                            # utilidades de visualización
 ├── notebooks/
-│   ├── 01_conexion_y_descarga.ipynb        # Ejercicios 1-2
-│   └── 02_indices_y_analisis_temporal.ipynb # Ejercicios 3-4 (resto en progreso)
-├── data/raw/             # datos crudos descargados (GeoTIFF, no se versionan) + geojson de cada lago
-├── data/processed/       # CSVs y figuras generadas (reproducibles, no se versionan)
-├── docs/                 # informe final .pdf dirigido a ambientalistas
+│   ├── 01_obtencion_de_datos.ipynb         # ejercicios 1, 2 y 3
+│   └── 02_analisis_cianobacteria.ipynb     # ejercicios 4 al 8
+├── data/raw/                               # GeoTIFF descargados
+├── data/processed/                         # índices calculados y estadísticas
 ├── requirements.txt
+└── README.md
 ```
 
-## Setup
+## Requisitos
+
+- Python 3.14
+- Una cuenta de [Copernicus Data Space](https://dataspace.copernicus.eu/)
+
+## Instalación
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate  # o .venv\Scripts\activate en Windows
-pip install -r requirements.txt
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m ipykernel install --user \
+    --name lab4-cc3084 --display-name "Python (Laboratorio 4)"
 ```
 
-Crea un archivo `.env` (basado en `.env.example`) con tus credenciales OAuth
-de Copernicus Data Space Ecosystem:
-
-```
-SH_CLIENT_ID=...
-SH_CLIENT_SECRET=...
-```
-
-Genera esas credenciales en https://dataspace.copernicus.eu (cuenta gratuita)
-→ https://shapps.dataspace.copernicus.eu/dashboard/#/account/settings →
-pestaña "OAuth clients" → "+ Create new".
+Los notebooks usan el kernel `lab4-cc3084`.
 
 ## Uso
 
-1. `notebooks/01_conexion_y_descarga.ipynb` — conecta a la API y descarga,
-   para cada lago y cada una de las 11 fechas oficiales del enunciado, las
-   bandas necesarias para NDVI/NDWI y el resultado del script de
-   cianobacteria.
-2. `notebooks/02_indices_y_analisis_temporal.ipynb` — calcula los índices,
-   arma la tabla `lago x fecha x índice` y grafica la evolución temporal del
-   índice de cianobacteria.
+1. **Autenticarse** (una sola vez; abre una página web para confirmar la identidad y guarda un token que luego se reutiliza):
 
-## Datos
+```bash
+.venv/bin/python src/auth_openeo.py
+```
 
-Las coordenadas (bbox) y fechas oficiales de cada lago están fijadas en
-`src/config.py`, tal como se especifican en el enunciado del laboratorio
-(`Laboratorio 4. Datos Geoespaciales. 2026.pdf`), para asegurar que todos los
-grupos trabajen con la misma base de imágenes.
+2. **Ejecutar los notebooks** en orden, desde la carpeta `notebooks/`:
+
+   - `01_obtencion_de_datos.ipynb` descarga las 44 escenas (~550 MB) y genera los índices en `data/processed/`.
+   - `02_analisis_cianobacteria.ipynb` realiza los análisis temporal, espacial, de
+     correlación y comparativo.
+
+   Los pasos de descarga y procesamiento también se pueden correr directamente:
+
+   ```bash
+   .venv/bin/python src/download_sentinel.py
+   .venv/bin/python src/procesar.py
+   ```
